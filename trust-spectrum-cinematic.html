@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>The Trust Spectrum — The French Revolution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Lenis smooth scroll -->
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+<style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root {
+  --black:   #05050a;
+  --off-w:   #f0ede4;
+  --warm-w:  #e2ddd0;
+  --grey:    #58564e;
+  --dim:     rgba(240,237,228,0.45);
+  --gold:    #c8b89a;
+  --gold-dk: #8a7a62;
+  --red:     #c8342a;
+  --dot-in:  #e8724a;
+  --dot-cit: #7b8fe0;
+  --dot-hum: #4db890;
+  --fd: 'Cormorant Garamond', Georgia, serif;
+  --fm: 'DM Mono', monospace;
+  --fb: 'DM Sans', sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;}
+body{background:var(--black);color:var(--off-w);font-family:var(--fb);overflow-x:hidden;}
+
+/* ══════════════════════════════════════
+   PROGRESS BAR
+══════════════════════════════════════ */
+#pb{
+  position:fixed;top:0;left:0;height:2px;width:0%;
+  background:linear-gradient(90deg,var(--dot-in),var(--dot-cit),var(--dot-hum));
+  z-index:500;pointer-events:none;transition:width .08s linear;
+}
+
+/* ══════════════════════════════════════
+   LANG TOGGLE
+══════════════════════════════════════ */
+#lang-bar{
+  position:fixed;top:0;left:0;right:0;z-index:400;
+  display:flex;justify-content:flex-end;padding:16px 20px;
+  background:linear-gradient(to bottom,rgba(5,5,10,.9) 0%,transparent 100%);
+  pointer-events:none;
+}
+#lang-toggle{
+  display:flex;border:1px solid rgba(200,184,154,.3);border-radius:3px;
+  overflow:hidden;pointer-events:all;
+}
+.lb{
+  background:transparent;border:none;padding:6px 14px;
+  font-family:var(--fm);font-size:10px;letter-spacing:.15em;
+  color:var(--grey);cursor:pointer;transition:all .2s;
+}
+.lb.on{background:var(--gold);color:var(--black);}
+
+/* ══════════════════════════════════════
+   TIMELINE
+══════════════════════════════════════ */
+#tl{
+  position:fixed;left:20px;top:50%;transform:translateY(-50%);
+  z-index:300;display:flex;flex-direction:column;align-items:flex-start;
+}
+.tl-i{display:flex;flex-direction:column;align-items:flex-start;position:relative;}
+.tl-d{
+  width:7px;height:7px;border-radius:50%;
+  border:1.5px solid rgba(200,184,154,.2);background:transparent;
+  transition:all .4s;flex-shrink:0;
+}
+.tl-d.on{border-color:var(--gold);background:var(--gold);box-shadow:0 0 8px rgba(200,184,154,.4);}
+.tl-d.done{border-color:rgba(200,184,154,.35);background:rgba(200,184,154,.15);}
+.tl-c{width:1px;height:44px;margin-left:3px;background:rgba(200,184,154,.12);position:relative;overflow:hidden;}
+.tl-cf{position:absolute;top:0;left:0;right:0;height:0%;background:var(--gold);transition:height .5s ease;}
+.tl-l{
+  position:absolute;left:16px;top:-2px;
+  font-family:var(--fm);font-size:8px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(200,184,154,.2);white-space:nowrap;transition:color .4s;pointer-events:none;
+}
+.tl-l.on{color:var(--gold);}
+@media(max-width:600px){#tl{left:10px;}.tl-l{display:none;}.tl-c{height:30px;}}
+
+/* ══════════════════════════════════════
+   GLOBAL FILM GRAIN + VIGNETTE
+══════════════════════════════════════ */
+#grain{
+  position:fixed;inset:0;z-index:200;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+  background-size:256px;opacity:.45;mix-blend-mode:overlay;
+}
+#vignette{
+  position:fixed;inset:0;z-index:199;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,transparent 25%,rgba(5,5,10,.75) 100%);
+}
+
+/* ══════════════════════════════════════
+   FULLSCREEN SCENES (Hook, Lesson, Handoff)
+══════════════════════════════════════ */
+.fs{
+  position:relative;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:90px 72px;overflow:hidden;
+}
+@media(max-width:600px){.fs{padding:80px 24px 80px 48px;}}
+
+.fs-bg{
+  position:absolute;inset:0;z-index:0;
+  background-size:cover;background-position:center;
+  transition:opacity 1s ease;
+}
+.fs-bg::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(5,5,10,.72);
+}
+
+.fs-inner{position:relative;z-index:10;max-width:700px;width:100%;}
+
+/* ── text reveal: tied to scroll not auto ── */
+.sr{
+  opacity:0;transform:translateY(22px);
+  transition:opacity .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1);
+}
+.sr.in{opacity:1;transform:translateY(0);}
+.sr.out{opacity:0;transform:translateY(-14px);transition-duration:.3s;}
+.sr[data-d="1"]{transition-delay:.1s;}
+.sr[data-d="2"]{transition-delay:.22s;}
+.sr[data-d="3"]{transition-delay:.36s;}
+.sr[data-d="4"]{transition-delay:.52s;}
+.sr[data-d="5"]{transition-delay:.70s;}
+
+/* ── hook typography ── */
+.overline{
+  font-family:var(--fm);font-size:9px;letter-spacing:.35em;text-transform:uppercase;
+  color:rgba(200,184,154,.45);margin-bottom:2rem;display:block;
+}
+.h-giant{
+  font-family:var(--fd);font-size:clamp(2.2rem,5.5vw,4.4rem);
+  font-weight:300;font-style:italic;line-height:1.18;
+  color:var(--off-w);margin-bottom:.55em;
+}
+.h-giant em{font-style:normal;font-weight:700;color:var(--gold);}
+.h-sub{
+  font-family:var(--fd);font-size:clamp(1.05rem,2.4vw,1.4rem);
+  font-weight:300;font-style:italic;color:var(--dim);line-height:1.6;
+}
+
+/* scroll cue */
+.scroll-cue{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;z-index:20;
+}
+.scroll-cue span{font-family:var(--fm);font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--grey);}
+.sc-line{
+  width:1px;height:36px;
+  background:linear-gradient(to bottom,var(--grey),transparent);
+  animation:scAnim 2s ease-in-out infinite;
+}
+@keyframes scAnim{0%,100%{opacity:.5;transform:scaleY(1)}50%{opacity:.1;transform:scaleY(.3)}}
+
+/* ── lesson typography ── */
+.l-line{
+  font-family:var(--fd);font-size:clamp(1.3rem,3.2vw,2rem);
+  font-weight:300;font-style:italic;line-height:1.65;
+  color:var(--off-w);margin-bottom:.55em;
+}
+.l-line em{font-style:normal;font-weight:700;color:var(--dot-in);}
+.l-q{
+  font-family:var(--fd);font-size:clamp(1.2rem,2.8vw,1.75rem);
+  font-weight:400;font-style:italic;color:var(--gold);
+  border-top:1px solid rgba(200,184,154,.12);padding-top:1.4em;margin-top:.4em;
+  line-height:1.5;
+}
+
+/* ── handoff ── */
+.hf-t{
+  font-family:var(--fd);font-size:clamp(2rem,5.5vw,4rem);
+  font-weight:700;line-height:1.05;color:var(--off-w);margin-bottom:.8rem;
+}
+.hf-b{font-family:var(--fb);font-size:.9rem;color:var(--dim);line-height:1.75;margin-bottom:1.8rem;}
+.pips{display:flex;gap:6px;margin-bottom:1.4rem;}
+.pip{width:6px;height:6px;border-radius:50%;background:rgba(200,184,154,.18);}
+.pip.on{background:var(--gold);}
+.go-btn{
+  display:inline-flex;align-items:center;gap:10px;padding:14px 28px;
+  border:1.5px solid var(--gold);border-radius:3px;background:transparent;
+  color:var(--off-w);font-family:var(--fm);font-size:11px;
+  letter-spacing:.15em;text-transform:uppercase;cursor:pointer;
+  text-decoration:none;transition:all .25s;
+}
+.go-btn:hover{background:var(--gold);color:var(--black);}
+.go-arr{transition:transform .2s;}
+.go-btn:hover .go-arr{transform:translateX(5px);}
+
+/* ══════════════════════════════════════
+   EXHIBIT CHAPTERS
+   Sticky artifact + scrolling annotations
+══════════════════════════════════════ */
+.ch{position:relative;}/* height set by JS */
+
+.sticky-stage{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+}
+
+/* full-bleed chapter background image */
+.ch-bg{
+  position:absolute;inset:0;z-index:0;
+  background-size:cover;background-position:center;
+}
+.ch-bg::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(5,5,10,.65);
+}
+
+/* ── central artifact ── */
+.artifact-frame{
+  position:absolute;inset:0;z-index:10;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.artifact-img{
+  max-height:78vh;max-width:48vw;
+  width:auto;height:auto;object-fit:contain;
+  filter:sepia(.3) contrast(.88) brightness(.8);
+  box-shadow:0 0 120px rgba(0,0,0,.9),0 0 40px rgba(0,0,0,.7);
+  border:1px solid rgba(200,184,154,.07);
+  animation:artFloat 9s ease-in-out infinite;
+  transform-origin:center;
+}
+@keyframes artFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media(max-width:768px){.artifact-img{max-width:82vw;max-height:42vh;}}
+
+/* side images */
+.side-img{
+  position:absolute;z-index:15;
+  width:clamp(110px,14vw,200px);height:auto;
+  object-fit:cover;
+  filter:sepia(.45) contrast(.82) brightness(.65);
+  border:1px solid rgba(200,184,154,.1);
+  box-shadow:0 8px 40px rgba(0,0,0,.75);
+  opacity:0;transform:scale(.94);
+  transition:opacity .5s ease,transform .5s ease;
+  aspect-ratio:4/3;
+}
+.side-img.show{opacity:1;transform:scale(1);}
+.side-left{left:5%;top:50%;transform:translateY(-50%) scale(.94);}
+.side-left.show{transform:translateY(-50%) scale(1);}
+.side-right{right:5%;top:50%;transform:translateY(-50%) scale(.94);}
+.side-right.show{transform:translateY(-50%) scale(1);}
+
+/* ── spotlight ── */
+.spotlight{
+  position:absolute;z-index:20;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(200,184,154,.16) 0%,transparent 68%);
+  pointer-events:none;opacity:0;
+  transition:opacity .5s ease,left .7s cubic-bezier(.22,1,.36,1),top .7s cubic-bezier(.22,1,.36,1),width .5s,height .5s;
+}
+.spotlight.on{opacity:1;}
+
+/* ── annotation card ── */
+.anno-layer{
+  position:absolute;inset:0;z-index:30;
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:80px 5% 80px 52%;pointer-events:none;
+}
+@media(max-width:768px){
+  .anno-layer{padding:auto 5% 24px 5%;align-items:flex-end;}
+}
+.anno-card{
+  max-width:400px;width:100%;
+  opacity:0;transform:translateX(28px);
+  transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);
+  pointer-events:all;
+}
+.anno-card.on{opacity:1;transform:translateX(0);}
+
+.anno-inner{
+  background:rgba(5,5,10,.78);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(200,184,154,.11);border-radius:6px;
+  padding:26px 26px 22px;position:relative;overflow:hidden;
+}
+.anno-inner::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(200,184,154,.28),transparent);
+}
+
+.a-tag{
+  font-family:var(--fm);font-size:8px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:11px;display:flex;align-items:center;gap:8px;
+}
+.a-tag::after{content:'';flex:1;height:1px;background:rgba(200,184,154,.13);}
+
+.a-head{
+  font-family:var(--fd);font-size:clamp(1.4rem,2.8vw,2rem);
+  font-weight:600;line-height:1.12;color:var(--off-w);margin-bottom:11px;
+}
+.a-head em{font-style:italic;font-weight:300;color:var(--gold);}
+.a-head strong{color:var(--dot-in);}
+
+.a-body{font-family:var(--fb);font-size:.82rem;line-height:1.72;color:var(--dim);margin-bottom:14px;}
+.a-fact{
+  font-family:var(--fm);font-size:.7rem;
+  color:rgba(200,184,154,.42);border-top:1px solid rgba(200,184,154,.09);
+  padding-top:11px;line-height:1.65;
+}
+
+/* ── score block inside anno ── */
+.sc-block{margin-top:6px;}
+.sc-row{display:flex;align-items:center;gap:7px;margin-bottom:9px;}
+.sc-lbl{font-family:var(--fm);font-size:8px;letter-spacing:.13em;text-transform:uppercase;min-width:76px;}
+.sc-lbl.in{color:var(--dot-in);}
+.sc-lbl.cit{color:var(--dot-cit);}
+.sc-lbl.hum{color:var(--dot-hum);}
+.sc-num{font-family:var(--fm);font-size:1.15rem;font-weight:500;min-width:28px;text-align:right;}
+.sc-num.in{color:var(--dot-in);}
+.sc-num.cit{color:var(--dot-cit);}
+.sc-num.hum{color:var(--dot-hum);}
+.sc-trk{flex:1;height:2px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
+.sc-fill{height:100%;width:0%;border-radius:2px;transition:width 1.4s cubic-bezier(.22,1,.36,1);}
+.sc-fill.in{background:linear-gradient(90deg,rgba(232,114,74,.3),var(--dot-in));}
+.sc-fill.cit{background:linear-gradient(90deg,rgba(123,143,224,.3),var(--dot-cit));}
+.sc-fill.hum{background:linear-gradient(90deg,rgba(77,184,144,.3),var(--dot-hum));}
+.sc-delta{
+  font-family:var(--fm);font-size:.62rem;padding:1px 6px;border-radius:2px;
+}
+.sc-delta.neg{background:rgba(200,50,50,.12);color:#e05555;border:1px solid rgba(200,50,50,.2);}
+.sc-delta.pos{background:rgba(77,184,144,.12);color:var(--dot-hum);border:1px solid rgba(77,184,144,.2);}
+
+/* dot defs */
+.dot-defs{display:flex;flex-direction:column;gap:1.1rem;margin-top:6px;}
+.dd-item{display:flex;gap:.9rem;align-items:flex-start;}
+.dd-circ{width:11px;height:11px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.dd-circ.in{background:var(--dot-in);box-shadow:0 0 8px rgba(232,114,74,.4);}
+.dd-circ.cit{background:var(--dot-cit);box-shadow:0 0 8px rgba(123,143,224,.4);}
+.dd-circ.hum{background:var(--dot-hum);box-shadow:0 0 8px rgba(77,184,144,.4);}
+.dd-name{font-family:var(--fm);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
+.dd-def{font-family:var(--fd);font-size:1.05rem;font-style:italic;font-weight:300;line-height:1.35;}
+
+/* names list */
+.names{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+.name-row{display:flex;align-items:baseline;gap:8px;font-family:var(--fm);font-size:.72rem;color:var(--dim);}
+.name-dt{color:var(--grey);min-width:64px;font-size:.65rem;}
+.name-nm{}
+.name-row.x .name-nm{text-decoration:line-through;text-decoration-color:rgba(200,50,50,.45);color:rgba(200,184,154,.28);}
+.name-row.hi{color:var(--dot-in);font-weight:500;}
+.name-note{font-size:.6rem;color:var(--grey);margin-left:4px;}
+
+/* ══════════════════════════════════════
+   MAP CHAPTER
+══════════════════════════════════════ */
+.map-art{
+  position:absolute;inset:0;z-index:10;
+  display:flex;align-items:center;justify-content:center;pointer-events:none;
+}
+.map-wrap{
+  width:min(52vw,500px);height:auto;
+  filter:sepia(.55) contrast(.82) brightness(.68);
+  animation:artFloat 9s ease-in-out infinite;
+}
+.map-wrap svg{width:100%;height:auto;}
+
+/* SVG map styles */
+.fr-land{fill:#c9b07a;stroke:#7a6040;stroke-width:1.2;}
+.fr-sea{fill:#5a6a7a;opacity:.5;}
+.fr-hatch{stroke:#7a6040;stroke-width:.35;opacity:.18;}
+.m-lbl{font-family:Georgia,serif;font-size:10px;fill:#2a1a0a;opacity:.75;font-style:italic;}
+.m-lbl.enemy{fill:#6a1010;font-style:normal;font-size:9px;letter-spacing:.08em;font-weight:bold;}
+.m-lbl.city{fill:#0a1a2a;font-size:9px;}
+.m-city{fill:#0a1a2a;animation:mPulse 2s ease-in-out infinite;}
+@keyframes mPulse{0%,100%{r:3;opacity:1}50%{r:5;opacity:.4}}
+.m-enemy{fill:#8b1010;opacity:0;transition:opacity .4s ease 1.6s;}
+.m-enemy.show{opacity:1;}
+
+/* Invasion arrows - ink bleed */
+.inv{
+  stroke:#8b1010;stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:280;stroke-dashoffset:280;
+  transition:stroke-dashoffset 2s cubic-bezier(.22,1,.36,1);
+}
+.inv.draw{stroke-dashoffset:0;}
+.inv-h{fill:#8b1010;opacity:0;transition:opacity .4s ease 1.8s;}
+.inv-h.draw{opacity:1;}
+
+/* Victory arrows */
+.vic{
+  stroke:#2a6040;stroke-width:2.5;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:200;stroke-dashoffset:200;
+  transition:stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1);
+}
+.vic.draw{stroke-dashoffset:0;}
+.vic-h{fill:#2a6040;opacity:0;transition:opacity .4s ease 1.2s;}
+.vic-h.draw{opacity:1;}
+
+/* ══════════════════════════════════════
+   CHOICE INTERACTION
+══════════════════════════════════════ */
+.choice-wrap{margin-top:1.4rem;display:flex;flex-direction:column;gap:9px;}
+.ch-opt{
+  display:flex;align-items:center;gap:11px;padding:11px 15px;
+  background:rgba(255,255,255,.025);border:1px solid rgba(200,184,154,.1);
+  border-radius:4px;cursor:pointer;transition:all .22s;
+  font-family:var(--fb);font-size:.82rem;color:var(--off-w);text-align:left;width:100%;
+}
+.ch-opt:hover{background:rgba(200,184,154,.05);border-color:rgba(200,184,154,.25);}
+.ch-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.ch-ans{
+  margin-top:11px;padding:13px 15px;
+  border-left:3px solid var(--gold);background:rgba(200,184,154,.03);
+  font-family:var(--fb);font-size:.8rem;line-height:1.65;color:var(--dim);
+  opacity:0;transition:opacity .5s ease;border-radius:0 4px 4px 0;
+}
+.ch-ans.show{opacity:1;}
+.ch-opt.correct{border-color:var(--dot-cit);background:rgba(123,143,224,.07);}
+.ch-opt.dimmed{opacity:.28;pointer-events:none;}
+
+</style>
+</head>
+<body>
+
+<div id="pb"></div>
+<div id="grain"></div>
+<div id="vignette"></div>
+
+<div id="lang-bar">
+  <div id="lang-toggle">
+    <button class="lb on" onclick="setLang('en')">EN</button>
+    <button class="lb" onclick="setLang('jp')">日本語</button>
+  </div>
+</div>
+
+<nav id="tl"></nav>
+<main id="main"></main>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   ████████╗██████╗ ██╗   ██╗███████╗████████╗    ███████╗██████╗ ██╗████████╗
+      ██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝    ██╔════╝██╔══██╗██║╚══██╔══╝
+      ██║   ██████╔╝██║   ██║███████╗   ██║       █████╗  ██║  ██║██║   ██║
+      ██║   ██╔══██╗██║   ██║╚════██║   ██║       ██╔══╝  ██║  ██║██║   ██║
+      ██║   ██║  ██║╚██████╔╝███████║   ██║       ███████╗██████╔╝██║   ██║
+      ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝       ╚══════╝╚═════╝ ╚═╝   ╚═╝
+
+   ALL STORY CONTENT LIVES HERE. Edit anything in this block.
+   Code below "BUILD ENGINE" is not for editing.
+══════════════════════════════════════════════════════════ */
+
+/* ── BACKGROUND IMAGES ──
+   Using Unsplash (free hotlink, photographer credit below)
+   Format: images.unsplash.com/photo-{ID}?w=1600&q=85&fit=crop
+   ─────────────────────────────────────────────────────── */
+const BG = {
+  // Dark atmospheric backgrounds (Unsplash, free to hotlink)
+  hook:    'https://images.unsplash.com/photo-1519120944692-1a8d8cfc107f?w=1600&q=85&fit=crop', // dark dramatic sky
+  before:  'https://images.unsplash.com/photo-1533230408708-8f9f91d1235a?w=1600&q=85&fit=crop', // candlelight dark interior
+  dream:   'https://images.unsplash.com/photo-1580130379624-3a069adbffc5?w=1600&q=85&fit=crop', // blue dramatic
+  war:     'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&q=85&fit=crop', // aged parchment/paper texture
+  terror:  'https://images.unsplash.com/photo-1574169411997-4b2a9a2b2c96?w=1600&q=85&fit=crop', // dark red dramatic
+  lesson:  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=85&fit=crop', // dark minimal
+};
+
+/* ── ARTIFACT IMAGES ──
+   Using Unsplash stand-ins that are *visually appropriate*.
+   For final deploy: swap these for actual historical paintings
+   (see GitHub Pages guide at bottom of file).
+   ─────────────────────────────────────────────────────── */
+const ART = {
+  // Hook: dramatic crowd/revolution scene
+  hook:       'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=900&q=85&fit=crop',
+  // Before: formal portrait style
+  before:     'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=900&q=85&fit=crop',
+  // Before side: palace architecture
+  beforeSide: 'https://images.unsplash.com/photo-1549144511-f099e773c147?w=500&q=80&fit=crop',
+  // Dream: document/manuscript
+  dream:      'https://images.unsplash.com/photo-1610116306796-6fea9f4fae38?w=900&q=85&fit=crop',
+  // Dream side: crowd/uprising
+  dreamSide:  'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&q=80&fit=crop',
+  // Terror: dramatic portrait
+  terror:     'https://images.unsplash.com/photo-1543699565-003b8adda5fc?w=900&q=85&fit=crop',
+};
+
+/* ── CHAPTERS (timeline) ── */
+const CHS = [
+  {id:'hook',    en:'The Hook',   jp:'フック'},
+  {id:'before',  en:'Before',     jp:'革命前'},
+  {id:'dream',   en:'The Dream',  jp:'夢'},
+  {id:'war',     en:'The War',    jp:'戦争'},
+  {id:'terror',  en:'The Terror', jp:'恐怖'},
+  {id:'lesson',  en:'The Lesson', jp:'教訓'},
+];
+
+/* ── SCORE DATA ── */
+const SCORES = {
+  before:{
+    lbl:{en:'BEFORE · ANCIEN RÉGIME · 1788',jp:'革命前 · 1788年'},
+    rows:[
+      {k:'in', v:92, en:'The king\'s judgment = God\'s judgment.', jp:'王の判断＝神の判断。'},
+      {k:'cit',v:18, en:'97% of France had no political rights.',  jp:'97%が政治的権利を持たなかった。'},
+      {k:'hum',v:8,  en:'The empire ran on slavery.',              jp:'帝国は奴隷制の上に成り立っていた。'},
+    ]
+  },
+  claimed:{
+    lbl:{en:'CLAIMED · THE ASSEMBLY · 1789',jp:'主張 · 1789年'},
+    rows:[
+      {k:'in', v:78, en:'Leaders were servants of the people.',            jp:'指導者は国民の僕だった。'},
+      {k:'cit',v:82, en:'Highest Citizens score in history to that point.', jp:'史上最高の市民スコア。'},
+      {k:'hum',v:82, en:'"These rights belong to all of humanity."',        jp:'「権利は全人類に属する。」'},
+    ]
+  },
+  actual:{
+    lbl:{en:'ACTUAL · THE TERROR · 1793–94',jp:'現実 · 恐怖政治'},
+    rows:[
+      {k:'in', v:92, delta:+14, en:'From 78 to 92. "I am the revolution."',   jp:'78→92。「私が革命だ。」'},
+      {k:'cit',v:10, delta:-72, en:'From 82 to 10. Same leaders.',            jp:'82→10。同じ指導者。'},
+      {k:'hum',v:10, delta:-72, en:'They chose who among humanity deserved to live.', jp:'誰が生きるに値するかを決めた。'},
+    ]
+  }
+};
+
+const DOT_DEFS = [
+  {k:'in',  en:{nm:'Themselves', df:'How certain is the leader they cannot be wrong?'},    jp:{nm:'権力者自身', df:'指導者は自分が間違えないと確信しているか？'}},
+  {k:'cit', en:{nm:'Citizens',   df:'How much does the system trust its own people?'},     jp:{nm:'市民',       df:'システムは自国民をどれだけ信頼しているか？'}},
+  {k:'hum', en:{nm:'All Humans', df:'How far does trust extend beyond the border?'},       jp:{nm:'全人類',     df:'信頼は国境を越えてどこまで広がるか？'}},
+];
+
+const NAMES = [
+  {nm:'Louis XVI',         dt:'Jan 1793', x:true},
+  {nm:'Marie Antoinette',  dt:'Oct 1793', x:true},
+  {nm:'Georges Danton',    dt:'Apr 1794', x:true, note:'Co-founder of the Revolution'},
+  {nm:'Camille Desmoulins',dt:'Apr 1794', x:true},
+  {nm:'Jacques Hébert',    dt:'Mar 1794', x:true},
+  {nm:'Maximilien Robespierre', dt:'Jul 1794', hi:true, note:'The revolution ate itself'},
+];
+
+const CHOICE = {
+  q:  {en:'Which number changed most?', jp:'どの数字が最も変わったか？'},
+  opts:[
+    {k:'in',  en:'Themselves — leader\'s self-certainty',jp:'権力者自身 — 指導者の確信度',
+     ans:{en:'Changed, but least (+14). The real collapse is elsewhere.',jp:'変化したが最小（+14）。本当の崩壊は別にある。'}},
+    {k:'cit', correct:true, en:'Citizens — system\'s trust in its people',jp:'市民 — 市民への信頼',
+     ans:{en:'82 → 10. Δ −72. Same leaders. Same city. Four years.',jp:'82→10。Δ−72。同じ指導者。四年間。'}},
+    {k:'hum', en:'All Humans — how far trust extended',jp:'全人類 — 信頼の広がり',
+     ans:{en:'Also −72. But Citizens collapses furthest: highest in history to near-zero.',jp:'こちらも−72。しかし市民スコアが最も劇的に崩壊した。'}},
+  ]
+};
+
+/* ── SCENES ── */
+/*
+  type: 'fullscreen' | 'exhibit' | 'map' | 'handoff'
+  exhibit.stops[i].sp = spotlight {x%, y%, w, h}
+  exhibit.stops[i].side = {src, pos:'left'|'right'}
+  exhibit.stops[i].scores = scoreKey (triggers score reveal)
+  exhibit.stops[i].names = true (renders names list)
+  exhibit.stops[i].dotDefs = true (renders dot explainer)
+  map.stops[i].mapState = 'clean'|'invasion'|'committee'|'victory'|'creep'
+*/
+const STORY = [
+
+  /* ════ HOOK ════ */
+  {ch:'hook', type:'fullscreen', bg:BG.hook, art:ART.hook,
+   en:{ol:'The Trust Spectrum — The French Revolution',
+       h:'The French Revolution wrote the most universal declaration of human rights in history.',
+       sub:'Four years later, the same people were executing their own heroes.\nThis is not a story about villains.\nIt is a story about one number.'},
+   jp:{ol:'トラスト・スペクトラム — フランス革命',
+       h:'フランス革命は、歴史上最も普遍的な人権宣言を書いた。',
+       sub:'四年後、同じ人々が自分たちの英雄を処刑していた。\nこれは悪人の物語ではない。\nたった一つの数字の物語だ。'},
+   scrollHint:true},
+
+  /* ════ BEFORE ════ */
+  {ch:'before', type:'exhibit', bg:BG.before, art:ART.before,
+   stops:[
+     {sp:{x:'52%',y:'35%',w:210,h:210}, side:null,
+      en:{tag:'Before · France 1788', h:'175 years of silence.',
+          body:'The king hadn\'t asked his people for their opinion since 1614. Not from cruelty — from indifference. The peasants of France were as distant as the stars.',
+          fact:'97% of France had no political rights whatsoever.'},
+      jp:{tag:'革命前 · フランス 1788年', h:'175年間の沈黙。',
+          body:'国王は1614年以来、国民の意見を聞いていなかった。残酷さからではなく、無関心から。農民たちは星と同じくらい遠い存在だった。',
+          fact:'フランスの97%が政治的権利を一切持たなかった。'}},
+     {sp:{x:'44%',y:'62%',w:190,h:160}, side:{src:ART.beforeSide, pos:'right'},
+      en:{tag:'Versailles · The Palace', h:'700 rooms.\nAnd no toilets.',
+          body:'The palace of absolute power smelled like a sewer. A peasant worked 280 days a year and kept barely enough to eat twice a day. Versailles\' weekly food waste exceeded his annual income.',
+          fact:'The court spent 25% of royal revenue on itself.'},
+      jp:{tag:'ヴェルサイユ · 宮殿', h:'700の部屋。\nそしてトイレはなかった。',
+          body:'絶対権力の宮殿は下水道のような臭いがした。農民は年間280日働き、一日二回食べるのがやっとだった。ヴェルサイユの一週間の廃棄食料が彼の年収を上回った。',
+          fact:'宮廷は王室収入の25%を自分たちのために使った。'}},
+     {sp:{x:'50%',y:'50%',w:260,h:310}, side:null, dotDefs:true,
+      en:{tag:'Before · Score Reveal', h:'The numbers.',
+          body:'Three dots. Three questions. One framework across 25 political systems.'},
+      jp:{tag:'革命前 · スコア', h:'数字。',
+          body:'3つのドット。3つの質問。25の政治システムに共通するフレームワーク。'},
+      scores:'before'},
+   ]},
+
+  /* ════ DREAM ════ */
+  {ch:'dream', type:'exhibit', bg:BG.dream, art:ART.dream,
+   stops:[
+     {sp:{x:'50%',y:'28%',w:250,h:130}, side:{src:ART.dreamSide, pos:'left'},
+      en:{tag:'Claimed · 1789', h:'<em>Liberté.\nÉgalité.\nFraternité.</em>',
+          body:'The Assembly voted. The king lost. For the first time in French history — the people spoke, and power listened.',
+          fact:'The Declaration was adopted 26 August 1789.'},
+      jp:{tag:'主張 · 1789年', h:'<em>自由。\n平等。\n博愛。</em>',
+          body:'議会は票を投じた。国王は敗れた。フランスの歴史上初めて — 民が語り、権力が聞いた。',
+          fact:'宣言は1789年8月26日に採択された。'}},
+     {sp:{x:'42%',y:'54%',w:300,h:180}, side:null,
+      en:{tag:'Claimed · The Sentence', h:'"All men are born\nfree and equal."',
+          body:'Not just Frenchmen. All men. It was the most ambitious sentence any government had ever written.',
+          fact:'Article 1. It influenced every democratic constitution written in the next 200 years.'},
+      jp:{tag:'主張 · その文', h:'「すべての人間は\n自由に生まれ、平等だ。」',
+          body:'フランス人だけではない。すべての人間。いかなる政府も書いたことのない、最も野心的な一文だった。',
+          fact:'第1条。その後200年間に書かれたすべての民主主義憲法に影響を与えた。'}},
+     {sp:{x:'50%',y:'50%',w:270,h:310}, side:null,
+      en:{tag:'Claimed · Score Reveal', h:'What they promised.',
+          body:'The highest trust claim any government had ever made. Watch what happens.'},
+      jp:{tag:'主張 · スコア', h:'彼らが約束したこと。',
+          body:'いかなる政府もしたことのない最高の信頼の主張。何が起きるかを見よ。'},
+      scores:'claimed'},
+   ]},
+
+  /* ════ WAR (SVG MAP) ════ */
+  {ch:'war', type:'map', bg:BG.war,
+   stops:[
+     {mapState:'clean',
+      en:{tag:'The Invasion · 1792', h:'Austria and Prussia\nmoved toward Paris.',
+          body:'The empires decided the revolution couldn\'t be allowed to spread. Two armies crossed the border.',
+          fact:'The Duke of Brunswick threatened to destroy Paris if the king was harmed.'},
+      jp:{tag:'侵略 · 1792年', h:'オーストリアとプロイセンが\nパリへ向かった。',
+          body:'帝国たちは革命の拡散を許すわけにはいかないと決めた。二つの軍が国境を越えた。',
+          fact:'ブランシュヴァイク公は国王が害を受ければパリを破壊すると脅した。'}},
+     {mapState:'invasion',
+      en:{tag:'The Threat', h:'The revolution was\nabout to die.',
+          body:'Two years old. The most ambitious political project in history — surrounded, outnumbered, and running out of time.',
+          fact:'By August 1792, Prussian forces had crossed into France. Paris was in panic.'},
+      jp:{tag:'脅威', h:'革命は\n死に瀕していた。',
+          body:'まだ二年。歴史上最も野心的な政治プロジェクトが、包囲され、数で劣り、時間が尽きようとしていた。',
+          fact:'1792年8月、プロイセン軍はフランスに侵入した。パリはパニック状態だった。'}},
+     {mapState:'committee',
+      en:{tag:'Emergency Logic · The Turn', h:'"Temporary.\nUntil the danger passes."',
+          body:'Robespierre formed the Committee of Public Safety. Job: protect the revolution. Method: decide who was a true revolutionary. These are not the same job.',
+          fact:'Every government that has said "temporary emergency" has meant it — at the time.'},
+      jp:{tag:'緊急論理 · 転換点', h:'「危険が去るまで\n一時的なものだ。」',
+          body:'ロベスピエールは公安委員会を設立した。任務：革命を守ること。方法：誰が真の革命家かを決めること。これらは同じ仕事ではない。',
+          fact:'「一時的な緊急措置」と言ったあらゆる政府は、その時は本気だった。'}},
+     {mapState:'victory',
+      en:{tag:'The Victory · Valmy 1792', h:'They won.\nThe empires retreated.',
+          body:'The Battle of Valmy. France held. The revolution survived. The emergency had worked. That was the problem.',
+          fact:'Goethe witnessed Valmy and wrote: "From this day forth commences a new era in the world\'s history."'},
+      jp:{tag:'勝利 · ヴァルミー 1792年', h:'彼らは勝った。\n帝国は退いた。',
+          body:'ヴァルミーの戦い。フランスは持ちこたえた。革命は生き延びた。緊急措置は機能した。それが問題だった。',
+          fact:'ゲーテはヴァルミーを目撃してこう書いた：「この日から世界史の新しい時代が始まる。」'}},
+     {mapState:'creep',
+      en:{tag:'The Emergency That Never Ended', h:'The Committee\ndid not dissolve.',
+          body:'The definition of "enemy" kept expanding — inward. First the king. Then the moderates. Then other Jacobins. The emergency logic had no off switch.',
+          fact:'"Without terror, virtue is powerless." — Robespierre, 1794.'},
+      jp:{tag:'終わらない緊急事態', h:'委員会は\n解散しなかった。',
+          body:'「敵」の定義は内側へと拡張し続けた。最初は国王。次に穏健派。そして他のジャコバン党員。緊急事態の論理にはオフスイッチがなかった。',
+          fact:'「恐怖なき美徳は無力だ。」— ロベスピエール、1794年。'}},
+   ]},
+
+  /* ════ TERROR ════ */
+  {ch:'terror', type:'exhibit', bg:BG.terror, art:ART.terror,
+   stops:[
+     {sp:{x:'48%',y:'38%',w:210,h:230}, side:null,
+      en:{tag:'Actual · 1793–94', h:'The same leaders.\nThe same ideology.\nThe same city.',
+          body:'16,000 people guillotined in twelve months. Robespierre — the man who wrote "all men are born free" — ran the machine.',
+          fact:'"Virtue and terror." Without virtue, terror is destructive. Without terror, virtue is impotent.'},
+      jp:{tag:'現実 · 1793–94年', h:'同じ指導者たち。\n同じイデオロギー。\n同じ街。',
+          body:'12ヶ月で16,000人がギロチンに。「すべての人間は自由に生まれる」と書いたロベスピエールがその機械を動かした。',
+          fact:'「美徳と恐怖。」美徳なき恐怖は破壊的だ。恐怖なき美徳は無力だ。'}},
+     {sp:{x:'52%',y:'58%',w:220,h:185}, side:null, names:true,
+      en:{tag:'The Names', h:'The list kept shrinking.'},
+      jp:{tag:'名前たち', h:'リストは縮み続けた。'}},
+     {sp:{x:'50%',y:'50%',w:275,h:310}, side:null,
+      en:{tag:'Actual · Score Collapse', h:'From 82 to 10.\nFour years. Same leaders.',
+          body:'The biggest Citizens collapse in the dataset. One variable changed. Everything else stayed the same.'},
+      jp:{tag:'現実 · スコア崩壊', h:'82から10へ。\n四年間。同じ指導者。',
+          body:'データセット中最大の市民スコア崩壊。一つの変数が変わった。他はすべて同じだった。'},
+      scores:'actual'},
+   ]},
+
+  /* ════ LESSON ════ */
+  {ch:'lesson', type:'fullscreen', bg:BG.lesson,
+   en:{lines:[
+     'The ideology never changed.',
+     'Only <em>one number</em> did.',
+     'The French Revolution didn\'t fail because the leaders were evil.',
+     'It failed because they stopped believing they could be wrong.',
+     'That one belief — <em>"I am the revolution, to question me is to betray it"</em> — is the most dangerous sentence in politics.',
+     'It has appeared in every dictatorship in history.',
+   ], q:'Where do you see this sentence today?'},
+   jp:{lines:[
+     'イデオロギーは変わらなかった。',
+     '変わったのは<em>一つの数字</em>だけだった。',
+     'フランス革命が失敗したのは、指導者が悪だったからではない。',
+     '失敗したのは、彼らが自分の誤りを信じることをやめたからだ。',
+     'その一つの信念 — <em>「私が革命だ。私を疑うことは裏切りだ」</em> — は、政治において最も危険な言葉だ。',
+     'それは歴史上のすべての独裁政治に現れてきた。',
+   ], q:'今日、この言葉をどこで見ているか？'}},
+
+  /* ════ HANDOFF ════ */
+  {ch:'lesson', type:'handoff', bg:BG.lesson,
+   en:{intro:'This is one story of six.',
+       title:'Nazi Germany.\nSoviet Union.\nThe US today.',
+       body:'Same framework. Same scores. Opposite outcomes.\nThe Trust Spectrum shows you why.',
+       btn:'Explore the full spectrum'},
+   jp:{intro:'これは6つの物語のうちの1つ。',
+       title:'ナチス・ドイツ。\nソビエト連邦。\n現在のアメリカ。',
+       body:'同じフレームワーク。同じスコア。正反対の結果。\nトラスト・スペクトラムがその理由を示す。',
+       btn:'スペクトラムを探索する'}},
+];
+
+/* ══════════════════════════════════════════════════════════
+   BUILD ENGINE — do not edit below
+══════════════════════════════════════════════════════════ */
+
+const STOP_H = () => window.innerHeight * 1.25;
+let lang = 'en';
+let choiceMade = false;
+const scored = new Set();
+let mapState = '';
+
+const main = document.getElementById('main');
+
+/* ── UTILS ── */
+const el = (tag,cls) => { const e=document.createElement(tag); if(cls)e.className=cls; return e; };
+const txt = (e,en,jp) => { e.dataset.en=en||''; e.dataset.jp=jp||''; e.innerHTML=en||''; };
+function svgEl(tag,attrs={}){
+  const e=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  for(const[k,v] of Object.entries(attrs)) e.setAttribute(k,v);
+  return e;
+}
+
+/* ── BUILD TIMELINE ── */
+const tlEl = document.getElementById('tl');
+CHS.forEach((ch,i) => {
+  const item = el('div','tl-i'); item.id='tl-'+ch.id;
+  const dot = el('div','tl-d'); dot.id='tld-'+ch.id;
+  const lbl = el('span','tl-l'); lbl.id='tll-'+ch.id;
+  txt(lbl, ch.en, ch.jp);
+  item.appendChild(dot); item.appendChild(lbl);
+  if(i < CHS.length-1){
+    const c=el('div','tl-c'); c.id='tlc-'+ch.id;
+    const cf=el('div','tl-cf'); cf.id='tlcf-'+ch.id;
+    c.appendChild(cf); item.appendChild(c);
+  }
+  tlEl.appendChild(item);
+});
+
+/* ── SCORE BLOCK BUILDER ── */
+function mkScoreBlock(key, inclLabel){
+  const d = SCORES[key];
+  const wrap = el('div','sc-block');
+  if(inclLabel){
+    const lbl=el('div','a-fact'); txt(lbl, d.lbl.en, d.lbl.jp); lbl.style.marginBottom='10px';
+    wrap.appendChild(lbl);
+  }
+  d.rows.forEach(row => {
+    const r=el('div','sc-row');
+    const ln=el('span','sc-lbl '+row.k); txt(ln, {in:'THEMSELVES',cit:'CITIZENS',hum:'ALL HUMANS'}[row.k], {in:'権力者自身',cit:'市民',hum:'全人類'}[row.k]);
+    const num=el('span','sc-num '+row.k); num.textContent='0'; num.dataset.target=row.v;
+    const trk=el('div','sc-trk'); const fill=el('div','sc-fill '+row.k); fill.dataset.target=row.v; trk.appendChild(fill);
+    r.appendChild(ln); r.appendChild(num); r.appendChild(trk);
+    if(row.delta!==undefined){
+      const d=el('span','sc-delta '+(row.delta<0?'neg':'pos'));
+      d.textContent=(row.delta>0?'+':'')+row.delta; r.appendChild(d);
+    }
+    wrap.appendChild(r);
+  });
+  return wrap;
+}
+
+/* ── ANNOTATION CARD BUILDER ── */
+function mkCard(stop, scIdx, si){
+  const card = el('div','anno-card'); card.id='card-'+scIdx+'-'+si;
+  const inner = el('div','anno-inner');
+
+  const langData = stop[lang]||stop.en;
+  const jpData   = stop.jp||stop.en;
+  const enData   = stop.en;
+
+  // Tag
+  const tag=el('div','a-tag'); txt(tag, enData.tag, jpData.tag); inner.appendChild(tag);
+
+  // Headline
+  const head=el('h2','a-head');
+  txt(head, enData.h.replace(/\n/g,'<br>'), jpData.h.replace(/\n/g,'<br>'));
+  inner.appendChild(head);
+
+  // Dot defs (before score reveal in Before chapter)
+  if(stop.dotDefs){
+    const dw=el('div','dot-defs');
+    DOT_DEFS.forEach((d,di)=>{
+      const it=el('div','dd-item');
+      const c=el('div','dd-circ '+d.k);
+      const tx=el('div');
+      const nm=el('div','dd-name'); txt(nm,d.en.nm,d.jp.nm);
+      const df=el('div','dd-def'); txt(df,d.en.df,d.jp.df);
+      tx.appendChild(nm); tx.appendChild(df);
+      it.appendChild(c); it.appendChild(tx); dw.appendChild(it);
+    });
+    inner.appendChild(dw);
+  }
+
+  // Body
+  if(enData.body && !stop.names){
+    const b=el('p','a-body'); txt(b, enData.body, jpData.body); inner.appendChild(b);
+  }
+
+  // Names list
+  if(stop.names){
+    const nl=el('div','names');
+    NAMES.forEach(n=>{
+      const r=el('div','name-row'+(n.x?' x':'')+(n.hi?' hi':''));
+      const dt=el('span','name-dt'); dt.textContent=n.dt;
+      const nm=el('span','name-nm'); nm.textContent=n.nm;
+      r.appendChild(dt); r.appendChild(nm);
+      if(n.note){const nt=el('span','name-note');nt.textContent='— '+n.note;r.appendChild(nt);}
+      nl.appendChild(r);
+    });
+    inner.appendChild(nl);
+  }
+
+  // Scores
+  if(stop.scores){
+    inner.appendChild(mkScoreBlock(stop.scores, true));
+  }
+
+  // Fact
+  if(enData.fact && !stop.scores){
+    const f=el('p','a-fact'); txt(f, enData.fact, jpData.fact); inner.appendChild(f);
+  }
+
+  card.appendChild(inner);
+  return card;
+}
+
+/* ── BUILD SVG MAP ── */
+function mkMap(){
+  const ns='http://www.w3.org/2000/svg';
+  const svg=svgEl('svg',{viewBox:'0 0 420 380',xmlns:ns});
+
+  // Defs: ink-bleed filter
+  const defs=svgEl('defs');
+  const filt=svgEl('filter',{id:'ink'}); 
+  const turb=svgEl('feTurbulence',{type:'fractalNoise',baseFrequency:'0.045',numOctaves:'3',seed:'3'});
+  const disp=svgEl('feDisplacementMap',{in:'SourceGraphic',in2:'turbulence',scale:'4',xChannelSelector:'R',yChannelSelector:'G'});
+  filt.appendChild(turb); filt.appendChild(disp); defs.appendChild(filt); svg.appendChild(defs);
+
+  // Parchment bg
+  const bg=svgEl('rect',{x:'5',y:'5',width:'410',height:'370',rx:'3',fill:'#c2a06a',opacity:'0.35'}); svg.appendChild(bg);
+  const brd=svgEl('rect',{x:'10',y:'10',width:'400',height:'360',rx:'2',fill:'none',stroke:'#8a6a30',
+    'stroke-width':'1.5',opacity:'0.45'}); svg.appendChild(brd);
+
+  // France outline
+  const fr=svgEl('path',{d:'M 155,42 L 178,35 L 200,38 L 226,36 L 258,46 L 282,62 L 298,82 L 302,108 L 291,130 L 307,152 L 310,175 L 296,200 L 276,222 L 250,240 L 226,250 L 204,258 L 182,268 L 160,262 L 138,254 L 114,236 L 98,210 L 88,185 L 76,160 L 72,136 L 80,108 L 76,82 L 94,65 L 122,50 Z'});
+  fr.setAttribute('class','fr-land'); svg.appendChild(fr);
+
+  // Hatching
+  for(let y=48;y<272;y+=9){
+    const l=svgEl('line',{x1:'72',y1:y+'',x2:'312',y2:y+''}); l.setAttribute('class','fr-hatch'); svg.appendChild(l);
+  }
+
+  // Country labels
+  [['FRANCE','172','155'],['Bretagne','102','148'],['Gascogne','148','220']].forEach(([n,x,y])=>{
+    const t=svgEl('text',{x,y}); t.setAttribute('class','m-lbl'); t.textContent=n; svg.appendChild(t);
+  });
+
+  // Paris
+  const pd=svgEl('circle',{cx:'192',cy:'145',r:'3'}); pd.setAttribute('class','m-city'); svg.appendChild(pd);
+  const pl=svgEl('text',{x:'200',y:'143'}); pl.setAttribute('class','m-lbl city'); pl.textContent='Paris'; svg.appendChild(pl);
+
+  // Invasion arrows
+  const iarr=[
+    {id:'inv-p', d:'M 355,22 C 312,42 275,78 232,118'},
+    {id:'inv-a', d:'M 368,188 C 336,182 308,178 275,173'},
+  ];
+  iarr.forEach(a=>{
+    const p=svgEl('path',{d:a.d}); p.setAttribute('class','inv'); p.id=a.id;
+    p.setAttribute('filter','url(#ink)'); svg.appendChild(p);
+  });
+  const iheads=[
+    {id:'invh-p',pts:'232,118 245,104 230,106'},
+    {id:'invh-a',pts:'275,173 290,165 290,181'},
+  ];
+  iheads.forEach(h=>{
+    const p=svgEl('polygon',{points:h.pts}); p.setAttribute('class','inv-h'); p.id=h.id;
+    p.setAttribute('filter','url(#ink)'); svg.appendChild(p);
+  });
+
+  // Enemy labels and dots
+  [['PRUSSIA','330',18],['AUSTRIA','345',185]].forEach(([n,x,y],i)=>{
+    const c=svgEl('circle',{cx:x,cy:y+'',r:'5'}); c.setAttribute('class','m-enemy'); c.id='me-'+i; svg.appendChild(c);
+    const t=svgEl('text',{x:(Number(x)+8)+'',y:(Number(y)+4)+''}); 
+    t.setAttribute('class','m-lbl enemy'); t.id='mel-'+i;
+    t.style.opacity='0'; t.style.transition='opacity .4s ease 2s';
+    t.textContent=n; svg.appendChild(t);
+  });
+
+  // Victory arrows
+  const varr=[
+    {id:'vic-ne', d:'M 232,118 C 278,78 318,48 358,24'},
+    {id:'vic-e',  d:'M 275,173 C 308,178 336,182 368,188'},
+    {id:'vic-s',  d:'M 192,262 C 192,295 192,318 192,345'},
+  ];
+  varr.forEach(a=>{
+    const p=svgEl('path',{d:a.d}); p.setAttribute('class','vic'); p.id=a.id;
+    p.setAttribute('filter','url(#ink)'); svg.appendChild(p);
+  });
+  const vheads=[
+    {id:'vich-ne',pts:'358,24 342,34 344,20'},
+    {id:'vich-e', pts:'368,188 354,181 354,195'},
+    {id:'vich-s', pts:'192,345 185,330 199,330'},
+  ];
+  vheads.forEach(h=>{
+    const p=svgEl('polygon',{points:h.pts}); p.setAttribute('class','vic-h'); p.id=h.id;
+    p.setAttribute('filter','url(#ink)'); svg.appendChild(p);
+  });
+
+  return svg;
+}
+
+/* ── MAIN BUILD ── */
+STORY.forEach((sc, scIdx) => {
+
+  /* FULLSCREEN */
+  if(sc.type==='fullscreen'){
+    const s=el('section','fs'); s.dataset.ch=sc.ch; s.dataset.sci=scIdx;
+    const bg=el('div','fs-bg'); 
+    bg.style.backgroundImage=`url('${sc.bg}')`;
+    s.appendChild(bg);
+
+    // Hook: full-bleed art behind bg
+    if(sc.art){
+      const artDiv=el('div'); artDiv.style.cssText='position:absolute;inset:0;z-index:1;overflow:hidden;';
+      const img=el('img'); img.src=sc.art; img.loading='lazy';
+      img.style.cssText='width:100%;height:100%;object-fit:cover;opacity:0.25;filter:sepia(.4) contrast(.85);';
+      artDiv.appendChild(img); s.appendChild(artDiv);
+    }
+
+    const inner=el('div','fs-inner');
+    inner.style.cssText='position:relative;z-index:10;';
+    const d=sc.en;
+    if(d.ol){const e=el('span','overline sr');e.dataset.d=0;txt(e,d.ol,sc.jp.ol);inner.appendChild(e);}
+    if(d.h){const e=el('h1','h-giant sr');e.dataset.d=1;txt(e,d.h,sc.jp.h);inner.appendChild(e);}
+    if(d.sub){const e=el('p','h-sub sr');e.dataset.d=2;txt(e,d.sub.replace(/\n/g,'<br>'),sc.jp.sub.replace(/\n/g,'<br>'));inner.appendChild(e);}
+    if(d.lines){
+      d.lines.forEach((ln,li)=>{const e=el('p','l-line sr');e.dataset.d=li%5;txt(e,ln,sc.jp.lines[li]);inner.appendChild(e);});
+      // Choice
+      const qp=el('p','l-line sr'); qp.dataset.d=d.lines.length%5; txt(qp,CHOICE.q.en,CHOICE.q.jp); inner.appendChild(qp);
+      const cw=el('div','choice-wrap sr'); cw.dataset.d=(d.lines.length+1)%5;
+      CHOICE.opts.forEach(opt=>{
+        const btn=el('button','ch-opt'); btn.id='co-'+opt.k; btn.onclick=()=>pickChoice(opt.k);
+        const dot=el('div','ch-dot'); dot.style.background=opt.k==='in'?'var(--dot-in)':opt.k==='cit'?'var(--dot-cit)':'var(--dot-hum)';
+        const sp=el('span'); txt(sp,opt.en,opt.jp); btn.appendChild(dot); btn.appendChild(sp); cw.appendChild(btn);
+      });
+      const ans=el('div','ch-ans'); ans.id='ch-ans'; cw.appendChild(ans);
+      inner.appendChild(cw);
+      const lq=el('p','l-q sr'); lq.dataset.d=(d.lines.length+2)%5; txt(lq,d.q,sc.jp.q); inner.appendChild(lq);
+    }
+    s.appendChild(inner);
+    if(sc.scrollHint){
+      const h=el('div','scroll-cue');
+      h.innerHTML='<span data-en="scroll" data-jp="スクロール">scroll</span><div class="sc-line"></div>';
+      s.appendChild(h);
+    }
+    main.appendChild(s);
+
+  /* EXHIBIT */
+  } else if(sc.type==='exhibit'){
+    const ch=el('div','ch'); ch.dataset.ch=sc.ch; ch.dataset.sci=scIdx; ch.dataset.type='exhibit';
+    ch.style.height=(sc.stops.length * STOP_H() + window.innerHeight)+'px';
+
+    const stage=el('div','sticky-stage');
+    const bgDiv=el('div','ch-bg'); bgDiv.style.backgroundImage=`url('${sc.bg}')`;
+    stage.appendChild(bgDiv);
+
+    // Artifact
+    const af=el('div','artifact-frame');
+    const ai=el('img','artifact-img'); ai.src=sc.art; ai.alt='artifact'; ai.loading='lazy';
+    af.appendChild(ai);
+
+    // Side images
+    sc.stops.forEach((stop,si)=>{
+      if(!stop.side) return;
+      const img=el('img','side-img side-'+stop.side.pos); 
+      img.src=stop.side.src; img.loading='lazy';
+      img.id='si-'+scIdx+'-'+si; af.appendChild(img);
+    });
+    stage.appendChild(af);
+
+    // Spotlight
+    const sp=el('div','spotlight'); sp.id='sp-'+scIdx; stage.appendChild(sp);
+
+    // Anno cards
+    sc.stops.forEach((stop,si)=>{
+      const layer=el('div','anno-layer'); layer.id='al-'+scIdx+'-'+si;
+      const card=mkCard(stop, scIdx, si); layer.appendChild(card); stage.appendChild(layer);
+    });
+
+    ch.appendChild(stage); main.appendChild(ch);
+
+  /* MAP */
+  } else if(sc.type==='map'){
+    const ch=el('div','ch'); ch.dataset.ch=sc.ch; ch.dataset.sci=scIdx; ch.dataset.type='map';
+    ch.style.height=(sc.stops.length * STOP_H() + window.innerHeight)+'px';
+
+    const stage=el('div','sticky-stage');
+    const bgDiv=el('div','ch-bg'); bgDiv.style.backgroundImage=`url('${sc.bg}')`;
+    stage.appendChild(bgDiv);
+
+    // Map
+    const ma=el('div','map-art');
+    const mw=el('div','map-wrap'); mw.appendChild(mkMap()); ma.appendChild(mw); stage.appendChild(ma);
+
+    // Anno cards
+    sc.stops.forEach((stop,si)=>{
+      const layer=el('div','anno-layer'); layer.id='al-'+scIdx+'-'+si;
+      const card=mkCard(stop, scIdx, si); layer.appendChild(card); stage.appendChild(layer);
+    });
+
+    ch.appendChild(stage); main.appendChild(ch);
+
+  /* HANDOFF */
+  } else if(sc.type==='handoff'){
+    const s=el('section','fs'); s.dataset.ch=sc.ch;
+    const bg=el('div','fs-bg'); bg.style.backgroundImage=`url('${sc.bg}')`; s.appendChild(bg);
+    const inner=el('div','fs-inner'); inner.style.cssText='position:relative;z-index:10;';
+    const d=sc.en;
+    const intr=el('p','sr'); intr.style.cssText='font-family:var(--fm);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem;';
+    intr.dataset.d=0; txt(intr,d.intro,sc.jp.intro); 
+    const pips=el('div','pips sr'); pips.dataset.d=1;
+    for(let i=0;i<6;i++){const p=el('div','pip'+(i===0?' on':'')); pips.appendChild(p);}
+    const title=el('h2','hf-t sr'); title.dataset.d=2; txt(title,d.title.replace(/\n/g,'<br>'),sc.jp.title.replace(/\n/g,'<br>'));
+    const body=el('p','hf-b sr'); body.dataset.d=3; txt(body,d.body.replace(/\n/g,'<br>'),sc.jp.body.replace(/\n/g,'<br>'));
+    const btn=el('a','go-btn sr'); btn.dataset.d=4; btn.href='#';
+    const bs=el('span'); txt(bs,d.btn,sc.jp.btn); const ba=el('span','go-arr'); ba.textContent='→';
+    btn.appendChild(bs); btn.appendChild(ba);
+    inner.appendChild(intr); inner.appendChild(pips); inner.appendChild(title);
+    inner.appendChild(body); inner.appendChild(btn); s.appendChild(inner); main.appendChild(s);
+  }
+});
+
+/* ══════════════════════════════════════════════════════════
+   LENIS SMOOTH SCROLL
+   Heavy museum physics: lerp 0.05, duration 1.8s
+══════════════════════════════════════════════════════════ */
+const lenis = new Lenis({
+  duration: 1.8,
+  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  smoothWheel: true,
+  wheelMultiplier: 0.85,
+});
+
+lenis.on('scroll', onScroll);
+
+function raf(time){ lenis.raf(time); requestAnimationFrame(raf); }
+requestAnimationFrame(raf);
+
+/* ══════════════════════════════════════════════════════════
+   SCROLL HANDLER — scrub-based, tied to position
+══════════════════════════════════════════════════════════ */
+function onScroll({ scroll, limit }){
+  // Progress bar
+  document.getElementById('pb').style.width = (scroll/limit*100)+'%';
+
+  const vh = window.innerHeight;
+  let activeChapter = '';
+
+  // Fullscreen scenes
+  main.querySelectorAll('.fs').forEach(sec => {
+    const top = sec.getBoundingClientRect().top;
+    const bottom = top + sec.offsetHeight;
+    const entering = top < vh*.78 && bottom > vh*.18;
+    sec.querySelectorAll('.sr').forEach(e => {
+      e.classList.toggle('in', entering);
+      if(!entering && bottom < vh*.1) e.classList.add('out');
+      else e.classList.remove('out');
+    });
+    if(top < vh*.65 && bottom > vh*.35) activeChapter = sec.dataset.ch;
+  });
+
+  // Exhibit + map chapters
+  main.querySelectorAll('.ch').forEach(ch => {
+    const rect = ch.getBoundingClientRect();
+    const scrollInCh = -rect.top; // how far we've scrolled into this chapter
+    const stopH = STOP_H();
+    const stopIdx = Math.max(0, Math.min(Math.floor(scrollInCh / stopH), 10));
+    const sci = parseInt(ch.dataset.sci);
+    const sc = STORY[sci];
+    if(!sc||!sc.stops) return;
+    const clamp = Math.min(stopIdx, sc.stops.length-1);
+
+    if(rect.top < vh*.6 && rect.bottom > vh*.4) activeChapter = ch.dataset.ch;
+
+    sc.stops.forEach((_,si)=>{
+      const card = document.getElementById('card-'+sci+'-'+si);
+      if(card){
+        const active = si===clamp;
+        card.classList.toggle('on', active);
+        if(active){
+          const sb = card.querySelector('[data-score-key]')||card.querySelector('.sc-block');
+          if(sb && sb.dataset.scoreKey){
+            const uid=sci+'-'+si+'-'+sb.dataset.scoreKey;
+            if(!scored.has(uid)){scored.add(uid);animateScores(sb,sb.dataset.scoreKey);}
+          }
+        }
+      }
+    });
+
+    // Spotlight
+    const spEl = document.getElementById('sp-'+sci);
+    if(spEl && sc.stops[clamp]?.sp){
+      const s=sc.stops[clamp].sp;
+      spEl.style.cssText=`left:calc(${s.x} - ${s.w/2}px);top:calc(${s.y} - ${s.h/2}px);width:${s.w}px;height:${s.h}px;opacity:1;`;
+      spEl.classList.add('on');
+    }
+
+    // Side images
+    sc.stops.forEach((stop,si)=>{
+      if(!stop.side) return;
+      const img = document.getElementById('si-'+sci+'-'+si);
+      if(img) img.classList.toggle('show', si===clamp);
+    });
+
+    // Map state
+    if(sc.type==='map' && sc.stops[clamp]){
+      setMapState(sc.stops[clamp].mapState);
+    }
+  });
+
+  updateTL(activeChapter);
+}
+
+/* ── MAP STATE ── */
+function setMapState(state){
+  if(state===mapState) return;
+  mapState=state;
+  const draw = id => document.getElementById(id)?.classList.add('draw');
+  const undraw = id => { const e=document.getElementById(id); if(e){e.classList.remove('draw');} };
+  const show = id => { const e=document.getElementById(id); if(e){e.classList.add('show');e.style.opacity='1';} };
+
+  if(state==='clean'){
+    ['inv-p','inv-a','invh-p','invh-a'].forEach(undraw);
+    ['vic-ne','vic-e','vic-s','vich-ne','vich-e','vich-s'].forEach(undraw);
+    ['me-0','me-1'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.opacity='0';});
+    ['mel-0','mel-1'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.opacity='0';});
+  }
+  if(['invasion','committee','victory','creep'].includes(state)){
+    setTimeout(()=>{draw('inv-p');draw('invh-p');show('me-0');show('mel-0');},100);
+    setTimeout(()=>{draw('inv-a');draw('invh-a');show('me-1');show('mel-1');},700);
+  }
+  if(['victory','creep'].includes(state)){
+    ['vic-ne','vic-e','vic-s'].forEach((id,i)=>setTimeout(()=>draw(id),i*350));
+    setTimeout(()=>['vich-ne','vich-e','vich-s'].forEach(draw), 1100);
+  }
+}
+
+/* ── SCORE ANIMATION ── */
+function animateScores(block, key){
+  SCORES[key].rows.forEach((row,i)=>{
+    setTimeout(()=>{
+      const nums = block.querySelectorAll('.sc-num');
+      const fills = block.querySelectorAll('.sc-fill');
+      if(nums[i]) countUp(nums[i], row.v, 1400);
+      if(fills[i]) setTimeout(()=>{ fills[i].style.width=row.v+'%'; },80);
+    }, i*560);
+  });
+}
+function countUp(el,target,dur){
+  const t0=performance.now();
+  (function f(now){
+    const p=Math.min((now-t0)/dur,1);
+    el.textContent=Math.round((1-Math.pow(1-p,3))*target);
+    if(p<1) requestAnimationFrame(f); else el.textContent=target;
+  })(t0);
+}
+
+/* ── TIMELINE ── */
+let lastCh='';
+function updateTL(active){
+  if(active===lastCh) return; lastCh=active;
+  const idx=CHS.findIndex(c=>c.id===active);
+  CHS.forEach((ch,i)=>{
+    document.getElementById('tld-'+ch.id)?.classList.toggle('on',i===idx);
+    document.getElementById('tld-'+ch.id)?.classList.toggle('done',i<idx);
+    document.getElementById('tll-'+ch.id)?.classList.toggle('on',i===idx);
+    const cf=document.getElementById('tlcf-'+ch.id);
+    if(cf) cf.style.height=i<idx?'100%':i===idx?'50%':'0%';
+  });
+}
+
+/* ── LANGUAGE ── */
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('on',b.textContent.trim()===(l==='en'?'EN':'日本語')));
+  document.querySelectorAll('[data-en]').forEach(e=>{
+    const v=e.getAttribute('data-'+l); if(v!==null) e.innerHTML=v;
+  });
+}
+
+/* ── CHOICE ── */
+function pickChoice(k){
+  if(choiceMade) return; choiceMade=true;
+  const opt=CHOICE.opts.find(o=>o.k===k);
+  CHOICE.opts.forEach(o=>{
+    const b=document.getElementById('co-'+o.k); if(!b) return;
+    if(o.correct) b.classList.add('correct');
+    else if(o.k!==k) b.classList.add('dimmed');
+    b.style.pointerEvents='none';
+  });
+  const ans=document.getElementById('ch-ans');
+  if(ans){ans.textContent=opt.ans[lang]||opt.ans.en; ans.classList.add('show');}
+}
+
+/* ── RESIZE ── */
+window.addEventListener('resize',()=>{
+  main.querySelectorAll('.ch[data-type]').forEach(ch=>{
+    const sci=parseInt(ch.dataset.sci);
+    const sc=STORY[sci];
+    if(sc?.stops) ch.style.height=(sc.stops.length*STOP_H()+window.innerHeight)+'px';
+  });
+});
+
+/* ── INIT ── */
+window.addEventListener('load',()=>{
+  setLang('en');
+  // First scene in
+  setTimeout(()=>{
+    document.querySelectorAll('.fs:first-child .sr').forEach((e,i)=>{
+      setTimeout(()=>e.classList.add('in'),500+i*180);
+    });
+  },200);
+  // Mark score blocks with their key for detection
+  document.querySelectorAll('.sc-block').forEach(b=>{
+    const card=b.closest('.anno-card'); if(!card) return;
+    const id=card.id; // card-scIdx-si
+    const parts=id.split('-');
+    const sci=parseInt(parts[1]); const si=parseInt(parts[2]);
+    const sc=STORY[sci]; if(!sc?.stops?.[si]?.scores) return;
+    b.dataset.scoreKey=sc.stops[si].scores;
+  });
+});
+</script>
+
+<!--
+════════════════════════════════════════════════
+  GITHUB PAGES DEPLOYMENT GUIDE
+  3 Steps to a Live Shareable URL
+════════════════════════════════════════════════
+
+STEP 1 — Create a GitHub account and new repository
+  1. Go to github.com and sign up (free)
+  2. Click the "+" icon → "New repository"
+  3. Name it: trust-spectrum
+  4. Set to Public
+  5. Click "Create repository"
+
+STEP 2 — Upload your file
+  1. On your new repository page, click "Add file" → "Upload files"
+  2. Drag trust-spectrum-cinematic.html into the upload box
+  3. IMPORTANT: Rename it to index.html before uploading
+     (or rename after: click the file → pencil icon → change filename)
+  4. Click "Commit changes"
+
+STEP 3 — Enable GitHub Pages
+  1. Go to repository Settings → Pages (in the left sidebar)
+  2. Under "Source", select: Deploy from a branch
+  3. Under "Branch", select: main → / (root) → Save
+  4. Wait 60 seconds, then refresh the page
+  5. Your live URL appears at the top:
+     https://YOUR-USERNAME.github.io/trust-spectrum/
+
+DONE. Share that URL with anyone. It works on any device.
+
+────────────────────────────────────────────────
+BONUS: Replacing Unsplash images with real historical paintings
+────────────────────────────────────────────────
+Once on GitHub Pages, Wikimedia Commons images load fine.
+Replace the Unsplash URLs in the BG and ART objects with:
+
+  hook:   https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Une_ex%C3%A9cution_capitale%2C_place_de_la_R%C3%A9volution.jpg/1280px-Une_ex%C3%A9cution_capitale%2C_place_de_la_R%C3%A9volution.jpg
+  before: https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Louis_XVI_of_France.jpg/800px-Louis_XVI_of_France.jpg
+  dream:  https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Declaration_of_Human_Rights.jpg/800px-Declaration_of_Human_Rights.jpg
+  terror: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Robespierre.jpg/800px-Robespierre.jpg
+
+════════════════════════════════════════════════
+-->
+</body>
+</html>
